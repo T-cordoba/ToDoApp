@@ -1,5 +1,5 @@
 class Todo:
-    def __init__(self, code_id: int, title: str, description: str, completed: bool, tags: list[str]):
+    def __init__(self, code_id: int, title: str, description: str):
         self.code_id: int = code_id
         self.title: str = title
         self.description: str = description
@@ -20,22 +20,26 @@ class Todo:
 
 
 class TodoBook:
-    def __init__(self, todos: dict[int, Todo]):
+    def __init__(self):
         self.todos: dict[int, Todo] = {}
 
     def add_todo(self, title: str, description: str) -> int:
         todo_id: int = len(self.todos) + 1
         new_todo: Todo = Todo(todo_id, title, description, completed=False, tags=[])
-        self.todos: dict[int, Todo] = [todo_id, new_todo]
+        self.todos[todo_id] = new_todo
         return todo_id
 
     def pending_todos(self) -> list[Todo]:
-        return [Todo for todo in self.todos if not todo.completed]
+        return [todo for todo in self.todos.values() if not todo.completed]
 
     def completed_todos(self) -> list[Todo]:
-        return [Todo for todo in self.todos if todo.completed]
+        return [todo for todo in self.todos.values() if todo.completed]
 
     def tags_todo_count(self) -> dict[str, int]:
         tag_count = {}
+        for todo in self.todos.values():
+            for tag in todo.tags:
+                tag_count[tag] = tag_count.get(tag, 0) + 1
+        return tag_count
 
     pass
